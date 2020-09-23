@@ -115,10 +115,10 @@ void game()
 		}
 	}
 	else if(m<0)
-    {
-        printf("\t\t    回到主菜单……\n");
-        return;
-    }
+	{
+		printf("\t\t    回到主菜单……\n");
+		return;
+	}
 	
 	cls();
 	
