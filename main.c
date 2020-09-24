@@ -75,7 +75,7 @@ void welcome()
 	cls();
 	printf("\t\t\twelcome\n\n");
 	printf("\t\t1、开始游戏——————————1\n");
-	printf("\t\t2、排行榜————————————2\n");
+	printf("\t\t2、游戏记录——————————2\n");
 	printf("\t\t3、游戏帮助——————————3\n");
 	printf("\t\t4、退出游戏——————————0\n");
 	printf("\t\t       请选择( )\b\b");
