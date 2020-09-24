@@ -139,6 +139,7 @@ void game()
 			printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc,npc_g);
 			printf("\t\t\t请选择：\n\t\t\t攻击——1\n\t\t\t防御——2\n\t\t\t   ");
 			scanf("%d",&c);
+			getchar();
 			printf("\n\n");
 			if(c==1)
 			{
@@ -163,7 +164,8 @@ void game()
 					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc,npc_g);
 					printf("\t\t     你率先发动攻击，\n");
 					printf("\t    你精准的刺中了NPC,NPC血量减少%d\n",my_g);
-					sleep(2);
+					printf("\t\t      按Enter继续\n\t\t\t  ");
+					getchar();
 					if(npc<=0)
 					{
 						npc=0;
@@ -181,20 +183,9 @@ void game()
 					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc,npc_g);
 					printf("\t\t     你率先发动攻击，\n");
 					printf("\t    但是，你扑了个空，未能伤害到NPC。\n");
-					sleep(2);
+					getchar();
 				}
-				else if(d==2)
-				{
-					cls();
-					printf("\t\t     本次局数：%d局\n",m);
-					printf("\t\t      当前局数：%d\n",a);
-					printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my,my_g);
-					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc,npc_g);
-					printf("\t\t     你率先发动攻击，\n");
-					printf("      但是，NPC十分灵活的躲开了你的攻击，未能伤到NPC。\n");
-					sleep(2);
-				}
-				else if(d==3)
+				else if(d==2 || d==3)
 				{
 					cls();
 					my=my-npc_g;
@@ -208,7 +199,8 @@ void game()
 					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc,npc_g);
 					printf("\t\t     你率先发动攻击，\n");
 					printf("\t    你因为太过于紧张，反而被NPC击中。\n");
-					sleep(2);
+					printf("\t\t      按Enter继续\n\t\t\t  ");
+					getchar();
 					if(my<=0)
 					{
 						my=0;
@@ -233,7 +225,8 @@ void game()
 					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc,npc_g);
 					printf("\t\t     你率先发动攻击，\n");
 					printf("    你手慢了一点，被NPC击中，因为你防御着，你的血量减少%d。\n",ab);
-					sleep(2);
+					printf("\t\t      按Enter继续\n\t\t\t  ");
+					getchar();
 					if(my<=0)
 					{
 						my=0;
@@ -266,7 +259,8 @@ void game()
 					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc,npc_g);
 					printf("\t\t     你选择了防御。\n");
 					printf("      在你防御的时候顺便击中了NPC，使NPC的血量减少15。\n");
-					sleep(2);
+					printf("\t\t      按Enter继续\n\t\t\t  ");
+					getchar();
 					if(npc<=0)
 					{
 						npc=0;
@@ -289,7 +283,8 @@ void game()
 					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc,npc_g);
 					printf("\t\t     你选择了防御。\n");
 					printf("     你没有防御好，导致敌人打中了你，你的血量减少%d。\n",npc_g);
-					sleep(2);
+					printf("\t\t      按Enter继续\n\t\t\t  ");
+					getchar();
 					if(my<=0)
 					{
 						my=0;
@@ -307,7 +302,8 @@ void game()
 					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc,npc_g);
 					printf("\t\t     你选择了防御。\n");
 					printf("\t  你防住了敌人的攻击，但是这已经很勉强了。\n");
-					sleep(2);
+					printf("\t\t      按Enter继续\n\t\t\t  ");
+					getchar();
 				}
 			}
 			cls();
@@ -317,6 +313,10 @@ void game()
 		{
 			printf("\t\t此回合玩家胜利\n");
 			sleep(3);
+			if(a==m)
+			{
+				break;
+			}
 			my_v++;
 			cls();
 			printf("\t      请选择要提升的属性\n\t\t  血量————1\n\t\t 攻击力————2\n\t\t      ");
@@ -343,6 +343,10 @@ void game()
 		{
 			printf("\t\t此回合NPC胜利\n");
 			sleep(3);
+			if(a==m)
+			{
+				break;
+			}
 			npc_v++;
 			my=bf1;
 			npc=bf2;
@@ -393,7 +397,7 @@ void set()
 		cls();
 		return;
 	}
-	printf("\t\t\t排行榜\n");
+	printf("\t\t       游戏记录\n");
 	
 	fread(a,size(),1,fp);
 	printf("%s\n",a);
