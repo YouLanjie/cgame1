@@ -3,6 +3,7 @@
 #include <stdlib.h>                          //system();srand();rand();
 #include <unistd.h>                          //sleep();
 #include <time.h>                            //time(NULL);
+#include <sys/stat.h>
 
 void cls();
 void welcome();
