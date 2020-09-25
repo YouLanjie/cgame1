@@ -385,7 +385,8 @@ void game()
 void set()
 {
 	FILE *fp;
-	char a[250];
+	int b=size();
+	char a[b];
 	
 	cls();
 	if((fp=fopen("file/save.txt","r"))==NULL)
@@ -425,15 +426,11 @@ void help()
 
 float size()
 {
-	FILE *fp=fopen("file/save.txt","r");
 	float fsize;
-	if(!fp)
-	{
-		return -1;
-	}
-	fseek(fp,0L,2);
-	fsize=ftell(fp);
-	fclose(fp);
+	
+	struct stat statbuf;
+	stat("file/save.txt",&statbuf);
+	fsize=statbuf.st_size;
 	
 	return fsize;
 }
