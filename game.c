@@ -36,7 +36,7 @@ void welcome(){
 	printf("\t\t       请选择( )\b\b");
 }
 void game(){
-	int m,a,aa,ab,b=0,c,d=2,e=0,f;
+	int m,a,aa,ab,c,d=2,e=0,f;
 	char ma[3]="n";
 	my.v=npc.v=0;
 	printf("\t\t      你想玩几局？");
@@ -56,7 +56,6 @@ void game(){
 	getchar();
 	cls();
 	for(a=1;a<=m;a++){
-		b=0;
 		while(b!=1){
 			srand(time(NULL));
 			d=2;
@@ -98,9 +97,8 @@ void game(){
 					getchar();
 					if(npc.x<=0){
 						npc.x=0;
-						b=1;
 						e=1;
-						continue;
+						break;
 					}
 				}
 				else if(d==1){
@@ -128,9 +126,8 @@ void game(){
 					getchar();
 					if(my.x<=0){
 						my.x=0;
-						b=1;
 						e=2;
-						continue;
+						break;
 					}
 				}
 				else if(d==7 || d==8 || d==9 || d==10){
@@ -149,9 +146,8 @@ void game(){
 					getchar();
 					if(my.x<=0){
 						my.x=0;
-						b=1;
 						e=2;
-						continue;
+						break;
 					}
 				}
 			}
@@ -177,9 +173,8 @@ void game(){
 					getchar();
 					if(npc.x<=0){
 						npc.x=0;
-						b=1;
 						e=1;
-						continue;
+						break;
 					}
 				}
 				else if(d==20){
@@ -196,9 +191,8 @@ void game(){
 					getchar();
 					if(my.x<=0){
 						my.x=0;
-						b=1;
 						e=2;
-						continue;
+						break;
 					}
 				}
 				else{
