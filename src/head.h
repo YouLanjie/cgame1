@@ -10,11 +10,6 @@ struct data{
 	int g;
 	int v;
 }my={500,500,0,0},npc={500,500,0,0};
-struct IF{
-	char c;
-	char s[20];
-	int i;
-};
 void cls();
 void welcome();
 void game();
