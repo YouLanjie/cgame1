@@ -4,7 +4,6 @@
 #include <unistd.h>                          //sleep();
 #include <time.h>                            //time(NULL);
 #include <sys/stat.h>
-int ll;
 struct data{
 	int x;
 	int x2;
@@ -16,7 +15,6 @@ struct IF{
 	char s[20];
 	int i;
 };
-struct save *new();
 void cls();
 void welcome();
 void game();
