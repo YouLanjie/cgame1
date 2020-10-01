@@ -1,7 +1,6 @@
 #include "src/head.h"
 int main(){
-	cls();
-	struct IF a;
+	char a[5];
 	int b=1;
 	if(b!=0){
 		printf("\t\t程序初始化中……\n");
@@ -12,15 +11,15 @@ int main(){
 		my.g=npc.g=rand()%(60-30)+30;
 		b=0;
 	}
-	while(strcmp("0",a.s)!=0){
+	while(strcmp("0",a)!=0){
 		welcome();
-		scanf("%s",a.s);
+		scanf("%s",a);
 		getchar();
 		cls();
-		if(strcmp("0",a.s)==0) return 0;
-		else if(strcmp("1",a.s)==0) game();
-		else if(strcmp("2",a.s)==0) set();
-		else if(strcmp("3",a.s)==0) help();
+		if(strcmp("0",a)==0) return 0;
+		else if(strcmp("1",a)==0) game();
+		else if(strcmp("2",a)==0) set();
+		else if(strcmp("3",a)==0) help();
 		else printf("\t\t\t 错误\n\n");
 	}
 	cls();
