@@ -28,22 +28,23 @@ void welcome(){                                           //打印开始界面
 	printf("\t\t4、退出游戏——————————0\n");
 	printf("\t\t       请选择( )\b\b");
 }
-void game(){
-	int m,a,aa,ab,c,d=2,e=0,f;
-	char ma[3]="n";
+
+void game(){                                              //游戏函数
+	int m,a,aa,ab,c,d=2,e=0,f;                        //定义一大堆变量
+	char ma='n';
 	my.v=npc.v=0;
 	printf("\t\t      你想玩几局？");
 	scanf("%d",&m);
 	getchar();
 	if(m==0) return;
-	else if(m>=100){
+	else if(m<0) return;
+	else if(m>1000) return;                           //谁会这么闲玩这么多局
+	else if(m>=100){                                  //勉强还能忍
 		cls();
 		printf("\t\t 这么多局，您确定吗？Y/n\n\t\t\t  ");
-		scanf("%c",ma);
-		getchar();
-		if(strcmp("n",ma)==0 || strcmp("N",ma)==0) return;
+		ma=getchar();
+		if(ma=='y' || ma=='Y') return;
 	}
-	else if(m<0) return;
 	cls();
 	printf("\t\t     本次局数：%d局\n\t\t      按Enter继续\n\t\t\t  ",m);
 	getchar();
@@ -63,9 +64,8 @@ void game(){
 			if(c==0){
 				cls();
 				printf("\t  您确定要退出吗？您的记录将不会保存！\n\t\t\t ");
-				scanf("%s",ma);
-				if(strcmp("y",ma)==0 || strcmp("Y",ma)==0) return;
-				printf("\n");
+				ma=getchar();
+				if(ma=='y' || ma=='Y') return;
 				cls();
 			}
 			else if(c==1){
@@ -208,9 +208,7 @@ void game(){
 			printf("\t\t      按Enter继续\n\t\t\t  ");
 			getchar();
 			my.v++;
-			if(a==m){
-				break;
-			}
+			if(a==m) break;
 			cls();
 			printf("\t      请选择要提升的属性\n\t\t  血量————1\n\t\t 攻击力————2\n\t\t      ");
 			scanf("%d",&f);
