@@ -1,30 +1,25 @@
-#include "src/head.h"
-void cls(){system("clear");}
+#include "src/head.h"                                     //引入头文件
+
+void cls(){system("clear");}                              //清屏->兼容问题
+
 int main(){
-	char a;
-	int b=1;
-	if(b!=0){
-		printf("\t\t程序初始化中……\n");
-		system("mkdir file");
-		system("touch file/save.txt");
-		srand(time(NULL));
-		my.g=npc.g=rand()%(450-400)+400;
-		my.g=npc.g=rand()%(60-30)+30;
-		b=0;
-	}
-	while(a!='0'){
-		welcome();
-		a=getchar();
-		cls();
-		if(a=='0') return 0;
-		else if(a=='1') game();
-		else if(a=='2') set();
-		else if(a=='3') help();
-	}
-	cls();
-	return 0;
+	char a;                                           //用于判断选择的字符变量
+	system("mkdir file");                             //程序初始化
+	system("touch file/save.txt");                    //创建sava.txt文件，存储游戏数据。如果有需要可以自行修改
+	srand(time(NULL));                                //随机数
+	my.g=npc.g=rand()%(60-30)+30;                     //随机初始攻击力
+	while(a!='0'){                                    //主菜单
+		welcome();                                //打印主菜单
+		a=getchar();                              //将输入的字符串赋予变量a，由于getchar函数一次只能获取一个字符，所以不用担心会内存溢出
+		if(a=='0') return 0;                      //判断是否等于“0”，如果是，就退出程序
+		else if(a=='1') game();                   //如果是“1”，就开始游戏
+		else if(a=='2') save();                   //如果是“2”，就打开游戏记录
+		else if(a=='3') help();                   //如果是“3”，就打开帮助
+	}                                                 //如果都不正确，重新开始
+	return 0;                                         //结束main函数，退出程序
 }
-void welcome(){
+
+void welcome(){                                           //打印开始界面
 	cls();
 	printf("\t\t\twelcome\n\n");
 	printf("\t\t1、开始游戏——————————1\n");
@@ -271,7 +266,7 @@ void game(){
 	cls();
 	return;
 }
-void set(){
+void save(){
 	char a[70];
 	int b=size()/70+1,i;
 	cls();
