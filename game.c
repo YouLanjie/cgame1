@@ -30,9 +30,9 @@ void welcome(){                                           //打印开始界面
 }
 
 void game(){                                              //游戏函数
-	int m,a,aa,ab,c,d=2,e=0,f;                        //定义一大堆变量
+	int m,a,aa,ab,c,d=0,e=0,f;                        //定义一大堆变量
 	char ma='n';
-	my.v=npc.v=0;
+
 	printf("\t\t      你想玩几局？");
 	scanf("%d",&m);
 	getchar();
@@ -52,7 +52,6 @@ void game(){                                              //游戏函数
 	for(a=1;a<=m;a++){
 		while(1){
 			srand(time(NULL));
-			d=2;
 			printf("\t\t     本次局数：%d局\n",m);
 			printf("\t\t      当前局数：%d\n",a);
 			printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my.x,my.g);
@@ -264,6 +263,7 @@ void game(){                                              //游戏函数
 	cls();
 	return;
 }
+
 void save(){
 	char a[70];
 	int b=size()/70+1,i;
@@ -287,6 +287,7 @@ void save(){
 	cls();
 	return;
 }
+
 void help(){
 	cls();
 	printf("\t\t\t 帮助\n");
@@ -299,6 +300,7 @@ void help(){
 	cls();
 	return;
 }
+
 float size(){
 	float fsize;	
 	struct stat statbuf;
