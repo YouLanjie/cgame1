@@ -9,8 +9,9 @@ int main(){
 	srand(time(NULL));                                //随机数
 	my.g=npc.g=rand()%(60-30)+30;                     //随机初始攻击力
 	while(a!='0'){                                    //主菜单
+		a='1';
 		welcome();                                //打印主菜单
-		scanf("%c",&a);                              //将输入的字符串赋予变量a
+		scanf("%c",&a);                           //将输入的字符串赋予变量a
 		getchar();
 		cls();
 		if(a=='0') return 0;                      //判断是否等于“0”，如果是，就退出程序
@@ -49,6 +50,7 @@ void game(){                                              //游戏函数
 		if(ma=='y' || ma=='Y') cls();
 		else return;
 	}
+	cls();
 	printf("\t\t     本次局数：%d局\n\t\t      按Enter继续\n\t\t\t  ",m);
 	getchar();
 	cls();
@@ -181,32 +183,32 @@ void game(){                                              //游戏函数
 			printf("\t\t      按Enter继续\n\t\t\t  ");
 			getchar();
 			my.v++;
+			my.x=my.x2;
+			npc.x=npc.x;
 			if(a==m) break;
 			cls();
 			printf("\t      请选择要提升的属性\n\t\t  血量————1\n\t\t 攻击力————2\n\t\t      ");
 			scanf("%d",&f);
 			srand(time(NULL));
 			if(f==1){
-				my.x=my.x2;
-				npc.x=npc.x2;
 				my.x=my.x+rand()%(100-30)+30;
 				my.x2=my.x;
 				npc.x=npc.x+rand()%(40-30)+30;
 				npc.x2=npc.x;
 			}
 			else{
-				my.x=my.x2;
-				npc.x=npc.x2;
 				my.g=my.g+rand()%(20-10)+10;
 				npc.g=npc.g+rand()%(9-1)+1;
 			}
 		}
 		else if(e==2){
 			printf("\t\t此回合NPC胜利\n");
+			printf("\t\t      按Enter继续\n\t\t\t  ");
+			getchar();
 			npc.v++;
-			if(a==m) break;
 			my.x=my.x2;
 			npc.x=npc.x;
+			if(a==m) break;
 			my.x=my.x+rand()%(40-10)+10;
 			my.x2=my.x;
 			npc.x=npc.x+rand()%(60-40)+40;
@@ -218,6 +220,7 @@ void game(){                                              //游戏函数
 	}
 	FILE *fp=fopen("file/save.txt","a");
 	if(!fp) return;
+	cls();
 	if(my.v==npc.v){
 		printf("\t\t\t平局\n");
 		fprintf(fp,"\t 局数：%d  玩家赢：%d  NPC赢：%d  平局\n",m,my.v,npc.v);
