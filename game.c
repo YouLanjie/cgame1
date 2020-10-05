@@ -55,10 +55,7 @@ void game(){                                              //游戏函数
 	for(a=1;a<=m;a++){
 		while(1){
 			srand(time(NULL));
-			printf("\t\t     本次局数：%d局\n",m);
-			printf("\t\t      当前局数：%d\n",a);
-			printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my.x,my.g);
-			printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc.x,npc.g);
+			print
 			printf("\t\t\t请选择：\n\t\t\t攻击——1\n\t\t\t防御——2\n\t\t\t   ");
 			scanf("%d",&c);
 			getchar();
@@ -73,20 +70,14 @@ void game(){                                              //游戏函数
 			}
 			else if(c==1){
 				cls();
-				printf("\t\t     本次局数：%d局\n",m);
-				printf("\t\t      当前局数：%d\n",a);
-				printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my.x,my.g);
-				printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc.x,npc.g);
+				print
 				printf("\t\t     你率先发动攻击，\n");
 				d=rand()%(10-0);
 				if(d==0 || d==4 || d==5 || d==6){
 					cls();
 					npc.x=npc.x-my.g;
 					if(npc.x<0) npc.x=0;
-					printf("\t\t     本次局数：%d局\n",m);
-					printf("\t\t      当前局数：%d\n",a);
-					printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my.x,my.g);
-					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc.x,npc.g);
+					print
 					printf("\t\t     你率先发动攻击，\n");
 					printf("\t    你精准的刺中了NPC,NPC血量减少%d\n",my.g);
 					printf("\t\t      按Enter继续\n\t\t\t  ");
@@ -99,10 +90,7 @@ void game(){                                              //游戏函数
 				}
 				else if(d==1){
 					cls();
-					printf("\t\t     本次局数：%d局\n",m);
-					printf("\t\t      当前局数：%d\n",a);
-					printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my.x,my.g);
-					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc.x,npc.g);
+					print
 					printf("\t\t     你率先发动攻击，\n");
 					printf("\t    但是，你扑了个空，未能伤害到NPC。\n");
 					printf("\t\t      按Enter继续\n\t\t\t  ");
@@ -112,10 +100,7 @@ void game(){                                              //游戏函数
 					cls();
 					my.x=my.x-npc.g;
 					if(my.x<0) my.x=0;
-					printf("\t\t     本次局数：%d局\n",m);
-					printf("\t\t      当前局数：%d\n",a);
-					printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my.x,my.g);
-					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc.x,npc.g);
+					print
 					printf("\t\t     你率先发动攻击，\n");
 					printf("\t    你因为太过于紧张，反而被NPC击中。\n");
 					printf("\t\t      按Enter继续\n\t\t\t  ");
@@ -132,10 +117,7 @@ void game(){                                              //游戏函数
 					ab=npc.g-aa;
 					my.x=my.x-ab;
 					if(my.x<0) my.x=0;
-					printf("\t\t     本次局数：%d局\n",m);
-					printf("\t\t      当前局数：%d\n",a);
-					printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my.x,my.g);
-					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc.x,npc.g);
+					print
 					printf("\t\t     你率先发动攻击，\n");
 					printf("    你手慢了一点，被NPC击中，因为你防御着，你的血量减少%d。\n",ab);
 					printf("\t\t      按Enter继续\n\t\t\t  ");
@@ -149,20 +131,14 @@ void game(){                                              //游戏函数
 			}
 			else{
 				cls();
-				printf("\t\t     本次局数：%d局\n",m);
-				printf("\t\t      当前局数：%d\n",a);
-				printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my.x,my.g);
-				printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc.x,npc.g);
+				print
 				printf("\t\t     你选择了防御。\n");
 				d=rand()%(20-0);
 				if(d==0){
 					cls();
 					npc.x=npc.x-15;
 					if(npc.x<0) npc.x=0;
-					printf("\t\t     本次局数：%d局\n",m);
-					printf("\t\t      当前局数：%d\n",a);
-					printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my.x,my.g);
-					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc.x,npc.g);
+					print
 					printf("\t\t     你选择了防御。\n");
 					printf("      在你防御的时候顺便击中了NPC，使NPC的血量减少15。\n");
 					printf("\t\t      按Enter继续\n\t\t\t  ");
@@ -177,10 +153,7 @@ void game(){                                              //游戏函数
 					cls();
 					my.x=my.x-npc.g;
 					if(my.x<0) my.x=0;
-					printf("\t\t     本次局数：%d局\n",m);
-					printf("\t\t      当前局数：%d\n",a);
-					printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my.x,my.g);
-					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc.x,npc.g);
+					print
 					printf("\t\t     你选择了防御。\n");
 					printf("     你没有防御好，导致敌人打中了你，你的血量减少%d。\n",npc.g);
 					printf("\t\t      按Enter继续\n\t\t\t  ");
@@ -193,10 +166,7 @@ void game(){                                              //游戏函数
 				}
 				else{
 					cls();
-					printf("\t\t     本次局数：%d局\n",m);
-					printf("\t\t      当前局数：%d\n",a);
-					printf("\t    玩家血量：%d\t玩家攻击力：%d\n",my.x,my.g);
-					printf("\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",npc.x,npc.g);
+					print
 					printf("\t\t     你选择了防御。\n");
 					printf("\t  你防住了敌人的攻击，但是这已经很勉强了。\n");
 					printf("\t\t      按Enter继续\n\t\t\t  ");
