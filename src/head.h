@@ -5,6 +5,8 @@
 #include <time.h>                            //time(NULL);
 #include <sys/stat.h>                        //Linux专用，用于获取文件字节数
 
+#define print printf("\t\t     本次局数：%d局\n\t\t      当前局数：%d\n\t    玩家血量：%d\t玩家攻击力：%d\n\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",m,a,my.x,my.g,npc.x,npc.g);
+
 struct data{                                 //定义存放角色数据的结构体Data
 	int x;                               //血量
 	int x2;                              //备份的血量，用于战斗结束后恢复血量
