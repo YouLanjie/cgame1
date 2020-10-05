@@ -67,7 +67,11 @@ void game(){                                              //游戏函数
 				printf("\t  您确定要退出吗？您的记录将不会保存！\n\t\t\t ");
 				scanf("%c",&ma);
 				getchar();
-				if(ma=='y' || ma=='Y') return;
+				if(ma=='y' || ma=='Y'){
+					my.x=my.x2;
+					npc.x=npc.x;
+					return;
+				}
 				cls();
 			}
 			else if(c==1){
