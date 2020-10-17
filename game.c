@@ -5,7 +5,7 @@ void cls(){system("clear");}                              //清屏->兼容问题
 int main(){
 	char a;                                           //用于判断选择的字符变量
 	system("mkdir file");                             //程序初始化
-	system("touch file/save.txt");                    //创建sava.txt文件，存储游戏数据。如果有需要可以自行修改
+	system("touch file/save.txt");                    //创建save.txt文件，存储游戏数据。如果有需要可以自行修改
 	srand(time(NULL));                                //随机数
 	my.g=npc.g=rand()%(60-30)+30;                     //随机初始攻击力
 	while(a!='0'){                                    //主菜单
@@ -254,14 +254,8 @@ void save(){
 		getchar();
 		return;
 	}
-	FILE *fp=fopen("file/save.txt","rb");
-	if(!fp) return;
 	printf("\t\t       游戏记录\n");
-	for(i=0;i!=b;i++){
-		fgets(a,70,fp);
-		printf("%s",a);
-	}
-	fclose(fp);
+	system("cat file/save.txt");
 	printf("\t\t      按Enter退出\n\t\t\t  ");
 	getchar();
 	cls();
