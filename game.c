@@ -1,7 +1,5 @@
 #include "src/head.h"                                     //引入头文件
 
-void cls(){system("clear");}                              //清屏->兼容问题
-
 int main(){
 	char a;                                           //用于判断选择的字符变量
 	system("mkdir file");                             //程序初始化
@@ -13,7 +11,7 @@ int main(){
 		welcome();                                //打印主菜单
 		scanf("%c",&a);                           //将输入的字符串赋予变量a
 		getchar();
-		cls();
+		clear
 		if(a=='0') return 0;                      //判断是否等于“0”，如果是，就退出程序
 		else if(a=='1') game();                   //如果是“1”，就开始游戏
 		else if(a=='2') save();                   //如果是“2”，就打开游戏记录
@@ -23,7 +21,7 @@ int main(){
 }
 
 void welcome(){                                           //打印开始界面
-	cls();
+	clear
 	printf("\t\t\twelcome\n\n");
 	printf("\t\t1、开始游戏——————————1\n");
 	printf("\t\t2、游戏记录——————————2\n");
@@ -43,17 +41,17 @@ void game(){                                              //游戏函数
 	else if(m<0) return;
 	else if(m>1000) return;                           //谁会这么闲玩这么多局
 	else if(m>=100){                                  //勉强还能忍
-		cls();
+		clear
 		printf("\t\t 这么多局，您确定吗？Y/n\n\t\t\t  ");
 		scanf("%c",&ma);
 		getchar();
-		if(ma=='y' || ma=='Y') cls();
+		if(ma=='y' || ma=='Y') clear
 		else return;
 	}
-	cls();
+	clear
 	printf("\t\t     本次局数：%d局\n\t\t      按Enter继续\n\t\t\t  ",m);
 	getchar();
-	cls();
+	clear
 	for(a=1;a<=m;a++){
 		while(1){
 			srand(time(NULL));
@@ -63,7 +61,7 @@ void game(){                                              //游戏函数
 			getchar();
 			printf("\n\n");
 			if(c==0){
-				cls();
+				clear
 				printf("\t  您确定要退出吗？您的记录将不会保存！\n\t\t\t ");
 				scanf("%c",&ma);
 				getchar();
@@ -72,15 +70,15 @@ void game(){                                              //游戏函数
 					npc.x=npc.x;
 					return;
 				}
-				cls();
+				clear
 			}
 			else if(c==1){
-				cls();
+				clear
 				print
 				printf("\t\t     你率先发动攻击，\n");
 				d=rand()%(10-0);
 				if(d==0 || d==4 || d==5 || d==6){
-					cls();
+					clear
 					npc.x=npc.x-my.g;
 					if(npc.x<0) npc.x=0;
 					print
@@ -95,7 +93,7 @@ void game(){                                              //游戏函数
 					}
 				}
 				else if(d==1){
-					cls();
+					clear
 					print
 					printf("\t\t     你率先发动攻击，\n");
 					printf("\t    但是，你扑了个空，未能伤害到NPC。\n");
@@ -103,7 +101,7 @@ void game(){                                              //游戏函数
 					getchar();
 				}
 				else if(d==2 || d==3){
-					cls();
+					clear
 					my.x=my.x-npc.g;
 					if(my.x<0) my.x=0;
 					print
@@ -118,7 +116,7 @@ void game(){                                              //游戏函数
 					}
 				}
 				else if(d==7 || d==8 || d==9 || d==10){
-					cls();
+					clear
 					aa=rand()%(5-0)+1;
 					ab=npc.g-aa;
 					my.x=my.x-ab;
@@ -136,12 +134,12 @@ void game(){                                              //游戏函数
 				}
 			}
 			else{
-				cls();
+				clear
 				print
 				printf("\t\t     你选择了防御。\n");
 				d=rand()%(20-0);
 				if(d==0){
-					cls();
+					clear
 					npc.x=npc.x-15;
 					if(npc.x<0) npc.x=0;
 					print
@@ -156,7 +154,7 @@ void game(){                                              //游戏函数
 					}
 				}
 				else if(d==20){
-					cls();
+					clear
 					my.x=my.x-npc.g;
 					if(my.x<0) my.x=0;
 					print
@@ -171,7 +169,7 @@ void game(){                                              //游戏函数
 					}
 				}
 				else{
-					cls();
+					clear
 					print
 					printf("\t\t     你选择了防御。\n");
 					printf("\t  你防住了敌人的攻击，但是这已经很勉强了。\n");
@@ -179,9 +177,9 @@ void game(){                                              //游戏函数
 					getchar();
 				}
 			}
-			cls();
+			clear
 		}
-		cls();
+		clear
 		if(e==1){
 			printf("\t\t此回合玩家胜利\n");
 			printf("\t\t      按Enter继续\n\t\t\t  ");
@@ -190,7 +188,7 @@ void game(){                                              //游戏函数
 			my.x=my.x2;
 			npc.x=npc.x;
 			if(a==m) break;
-			cls();
+			clear
 			printf("\t      请选择要提升的属性\n\t\t  血量————1\n\t\t 攻击力————2\n\t\t      ");
 			scanf("%d",&f);
 			srand(time(NULL));
@@ -220,11 +218,11 @@ void game(){                                              //游戏函数
 			printf("\t\t      按Enter继续\n\t\t\t  ");
 			getchar();
 		}
-		cls();
+		clear
 	}
 	FILE *fp=fopen("file/save.txt","a");
 	if(!fp) return;
-	cls();
+	clear
 	if(my.v==npc.v){
 		printf("\t\t\t平局\n");
 		fprintf(fp,"\t 局数：%d  玩家赢：%d  NPC赢：%d  平局\n",m,my.v,npc.v);
@@ -241,7 +239,7 @@ void game(){                                              //游戏函数
 		sleep(3);
 	}
 	fclose(fp);
-	cls();
+	clear
 	return;
 }
 
@@ -258,12 +256,12 @@ void save(){
 	system("cat file/save.txt");
 	printf("\t\t      按Enter退出\n\t\t\t  ");
 	getchar();
-	cls();
+	clear
 	return;
 }
 
 void help(){
-	cls();
+	clear
 	printf("\t\t\t 帮助\n");
 	printf("\t1、在主界面时选择项目对应的数字即可。\n");
 	printf("\t2、注意，游戏进行的全程只能输入整数，不可输入小数、字符串。\n");
@@ -271,7 +269,7 @@ void help(){
 	printf("\t4、不要在Windows下运行此程序。\n\n\n");
 	printf("\t\t     按Enter退出\n\t\t\t  ");
 	getchar();
-	cls();
+	clear
 	return;
 }
 
