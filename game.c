@@ -2,8 +2,7 @@
 
 int main(){
 	char a;                                           //用于判断选择的字符变量
-	system("mkdir file");                             //程序初始化
-	system("touch file/save.txt");                    //创建save.txt文件，存储游戏数据。如果有需要可以自行修改
+	system("touch ~/.save.txt");                      //创建save.txt文件，存储游戏数据。如果有需要可以自行修改
 	srand(time(NULL));                                //随机数
 	my.g=npc.g=rand()%(60-30)+30;                     //随机初始攻击力
 	while(a!='0'){                                    //主菜单
@@ -220,23 +219,26 @@ void game(){                                              //游戏函数
 		}
 		clear
 	}
-	FILE *fp=fopen("file/save.txt","a");
+	FILE *fp=fopen("~/.save.txt","a");
 	if(!fp) return;
 	clear
 	if(my.v==npc.v){
 		printf("\t\t\t平局\n");
 		fprintf(fp,"\t 局数：%d  玩家赢：%d  NPC赢：%d  平局\n",m,my.v,npc.v);
-		sleep(3);
+		printf("\t\t      按Enter继续\n\t\t\t  ");
+		getchar();
 	}
 	else if(my.v<npc.v){
 		printf("\t\t      NPC胜利\n");
 		fprintf(fp,"\t 局数：%d  玩家赢：%d  NPC赢：%d  NPC赢\n",m,my.v,npc.v);
-		sleep(3);
+		printf("\t\t      按Enter继续\n\t\t\t  ");
+		getchar();
 	}
 	else if(my.v>npc.v){
 		printf("\t\t      玩家胜利\n");
 		fprintf(fp,"\t 局数：%d  玩家赢：%d  NPC赢：%d  玩家赢\n",m,my.v,npc.v);
-		sleep(3);
+		printf("\t\t      按Enter继续\n\t\t\t  ");
+		getchar();
 	}
 	fclose(fp);
 	clear
@@ -253,7 +255,7 @@ void save(){
 		return;
 	}
 	printf("\t\t       游戏记录\n");
-	system("cat file/save.txt");
+	system("cat ~/.save.txt");
 	printf("\t\t      按Enter退出\n\t\t\t  ");
 	getchar();
 	clear
@@ -276,7 +278,7 @@ void help(){
 float size(){
 	float fsize;	
 	struct stat statbuf;
-	stat("file/save.txt",&statbuf);
+	stat("~/.save.txt",&statbuf);
 	fsize=statbuf.st_size;	
 	return fsize;
 }
