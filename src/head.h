@@ -1,7 +1,7 @@
 #include <stdio.h>                           //标准库
 #include <string.h>                          //strcmp();
 #include <stdlib.h>                          //system();srand();rand();
-//#include <unistd.h>                          //sleep();
+//#include <unistd.h>                        //sleep();                使用system("sleep float");解决
 #include <time.h>                            //time(NULL);
 #include <sys/stat.h>                        //Linux专用，用于获取文件字节数
 
