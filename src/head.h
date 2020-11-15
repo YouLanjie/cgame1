@@ -1,12 +1,13 @@
 #include <stdio.h>                           //标准库
 #include <string.h>                          //strcmp();
 #include <stdlib.h>                          //system();srand();rand();
-//#include <unistd.h>                        //sleep();                使用system("sleep float");解决
+#include <unistd.h>                          //可使用sleep();
 #include <time.h>                            //time(NULL);
 #include <sys/stat.h>                        //Linux专用，用于获取文件字节数
+#include <termios.h>
 
 #define print printf("\t\t     本次局数：%d局\n\t\t      当前局数：%d\n\t    玩家血量：%d\t玩家攻击力：%d\n\t    NPC 血量：%d\tNPC攻击力：%d\n\n\n\n",m,a,my.x,my.g,npc.x,npc.g);
-#define clear system("clear");               //清屏->兼容问题
+#define Clear system("clear");               //清屏->兼容问题
 
 struct data{                                 //定义存放角色数据的结构体Data
 	int x;                               //血量
