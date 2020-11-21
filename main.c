@@ -21,12 +21,12 @@ int main() {
 
 void welcome() {                                          //打印开始界面
 	Clear
-	printf("\t\t\twelcome\n\n");
-	printf("\t\t1、开始游戏——————————1\n");
-	printf("\t\t2、游戏记录——————————2\n");
-	printf("\t\t3、游戏帮助——————————3\n");
-	printf("\t\t4、退出游戏——————————0\n");
-	printf("\t\t       请选择( )\b\b");
+	printf("\t\t\t\t    welcome\n\n");
+	printf("\t\t\t    1、开始游戏——————————1\n");
+	printf("\t\t\t    2、游戏记录——————————2\n");
+	printf("\t\t\t    3、游戏帮助——————————3\n");
+	printf("\t\t\t    4、退出游戏——————————0\n");
+	printf("\t\t\t           请选择( )\b\b");
 }
 
 void game() {                                             //游戏函数
