@@ -10,12 +10,14 @@
 |    日期    |       描述     |
 |:----------:|:--------------:|
 | 2021.06.01 | 向cgame2功能开发 |
+| 2021.06.04 | 修正README中的代码 |
+| 2021.06.04 | 修改代码，增加功能 |
 
 ---
 
 > 原来的代码：
 
-```
+```python
 import time
 import random
 
@@ -100,11 +102,11 @@ if x_c>y_c:
 if x_c<y_c:
     print("艾力克斯胜出")
 
-if x_c==y_c
+if x_c==y_c:
     print("双方平局")
 ```
 另一串：
-```
+```python
 import time
 import random
 
@@ -175,8 +177,7 @@ for a in range(0,int(game)):
         if game_player_a <= 0 and game_enemy_a > 0:
             print("第"+str(a)+"局敌人获胜")
             print("")
-            game_enemy_c = game_enemy_c + 1
-        
+            game_enemy_c = game_enemy_c + 1        
 print()
 print()
 print()
