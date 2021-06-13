@@ -1,5 +1,9 @@
 #include "headfile/head.h"                                //引入头文件
+#include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
 
 int main() {
@@ -8,10 +12,10 @@ int main() {
 	kbhit2();
 
 	srand(time(NULL));                                //随机数
-	my.g = npc.g = rand()%(60-30)+30;                 //随机初始攻击力
+	my.str = npc.str = rand()%(60-29)+30;             //随机初始攻击力
 
-	while(1) {                                //主菜单
-		welcome(1);                                //打印主菜单
+	while(1) {                                        //主菜单
+		welcome(1);                               //打印主菜单
 		switch (input()) {
 			case 0x30:
 				Clear
@@ -35,7 +39,7 @@ int main() {
 			case 0x39:
 				Clear
 				if(remove("./save.txt") == EOF) {
-					perror("\033[1;31mremove\033[0m");
+					perror("\033[1;31m[main]mremove\033[0m");
 					input();
 				}
 				break;
@@ -58,27 +62,29 @@ void welcome(int m) {                                          //打印开始界
 
 void game() {                                             //游戏函数
 	int count = 0;                                    //局数信息
-	int iinput = 0,aa,ab,c,d=0,e=0,f;                        //定义一大堆变量
+	int in = 0,d=0,win=0,f;                     //定义一大堆变量
 	char ma='n';
+	unsigned long RandomSeed = 0;
+	FILE * fp;
+	pid_t pid;
 
-	printf("\033[1;1H你想玩几局？\n");
-	while (iinput != 0x0A) {
-		printf("\033[s\033[1;1H你想玩几局？%d\033[u",count);
+	while (in != 0x0A) {
+		Clear
+		printf("\033[1;1H你想玩几局？%d\n%d",count,count);
 		kbhit2();
-		iinput = input();
-		if (iinput > 0x2F && iinput < 0x3A) {
+		in = input();
+		if (in > 0x2F && in < 0x3A) {
 			if (count == 0) {
-				Clear
-				printf("\033[1;1H你想玩几局？\n");
-				if (iinput == 0x30) {
-					continue;
+				if (in == 0x30) {
+					if (count == 0) {
+						continue;
+					}
 				}
 			}
-			count = count * 10 + ( iinput - 48 );
-			printf("%c",iinput);
+			count = count * 10 + ( in - 48 );
 			kbhit2();
 		}
-		else if (iinput == 0x7F) {
+		else if (in == 0x7F) {
 			Clear
 			printf("\033[1;1H你想玩几局？\n");
 			if (count != 0) {
@@ -87,25 +93,27 @@ void game() {                                             //游戏函数
 			else if (count < 10) {
 				count = 0;
 			}
-			printf("\033[1D%d",count);
 			kbhit2();
 		}
-		else if (iinput == 0x0A) {
+		else if (in == 0x0A) {
 			break;
 		}
 		else {
-			iinput = 0x00;
+			in = 0x00;
 		}
 	}
 
-	if(count == 0) return;
-	else if(count < 0) return;
-	else if(count > 1000) return;                         //谁会这么闲玩这么多局
+	if(count == 0) {
+		return;
+	}
+	else if(count < 0) {
+		return;
+	}
 	else if(count >= 100) {                               //勉强还能忍
 		Clear
-		printf("\t\t 这么多局，您确定吗？Y/n\n\t\t\t  ");
-		iinput = input();
-		if(iinput =='y' || iinput=='Y') {
+		printf("这么多局，您确定吗？Y/n\n\t\t\t  ");
+		in = input();
+		if(in =='y' || in=='Y') {
 			Clear
 		}
 		else {
@@ -113,44 +121,84 @@ void game() {                                             //游戏函数
 		}
 	}
 	Clear
+	srand(time(NULL));
+	RandomSeed = rand()%10001;
+	fp = fopen("./temp.txt","w");
+	if (fp == NULL) {
+		perror("\033[1;31m[init]fopen\033[0m");
+		input();
+		return;
+	}
+	fclose(fp);
+	pid = fork();
+	if (pid == EOF) {
+		perror("\033[1;31mfork\033[0m");
+		input();
+		return;
+	}
+	while (pid == 0) {
+		srand(RandomSeed);
+		RandomSeed += rand()%(10000 - 99) + 100;
+		fp = fopen("./temp.txt","w");
+		if (fp == NULL) {
+			perror("\033[1;31m[write]fopen\033[0m");
+			input();
+			exit(1);
+		}
+		fprintf(fp, "%ld", RandomSeed);
+		fclose(fp);
+		system("sleep 0.001");
+		printf("\033[1;60H      \033[1;60H%ld\033[1;1H",RandomSeed);
+		kbhit2();
+	}
 	for(int i = 1; i <= count; i++) {
 		while(1) {
-			srand(time(NULL));     /*随机数*/
 			Print
-			c = input();
+			in = input();
 			printf("\033[32m");
-			if(c == 0x30) {
+			fp = fopen("./temp.txt", "r");
+			if (fp == NULL) {
+				perror("\033[1;31m[read]fopen\033[0m");
+				input();
+				kill(pid, 1);
+				return;
+			}
+			fscanf(fp,"%ld",&RandomSeed);
+			fclose(fp);
+			srand(RandomSeed);     /*随机数*/
+			printf("\033[2;60H      \033[2;60H%ld",RandomSeed);
+
+			if(in == 0x30) {
 				Clear
 				printf("\033[1;1H您确定要退出吗？您的记录将不会保存！\n");
-				iinput = input();
-				if(iinput =='y' || iinput =='Y') {
-					my.x=my.x2;
-					npc.x=npc.x;
+				in = input();
+				if(in =='y' || in =='Y') {
+					my.str=my.back_str;
+					npc.str=npc.back_str;
+					remove("./temp.txt");
+					kill(pid, 1);
 					return;
 				}
 				Clear
 			}
-			else if(c == 0x31) {
+			else if(in == 0x31) {
 				Clear
-				d=rand()%(10-0);
+				d = rand()%(10-0);
 
-				if(d==0 || d==4 || d==5 || d==6) {      //击中
+				if(d == 0 || d == 4 || d == 5 || d == 6) {      //击中
 					Clear
-					npc.x=npc.x-my.g;
-					if(npc.x<0) npc.x=0;
+					npc.hp -= my.str;
+					if(npc.hp <= 0) {
+						npc.hp = 0;
+						win = 1;
+					}
 					Print
 					printf("\033[10;10H你率先发动攻击，\n");
-					printf("\t    你精准的刺中了NPC,NPC血量减少%d\n",my.g);
+					printf("\t    你精准的刺中了NPC,NPC血量减少%d\n",my.str);
 					printf("\t\t      按Enter继续\n\t\t\t  ");
 					input();
-
-					if(npc.x<=0) {
-						npc.x=0;
-						e=1;
-						break;
-					}
 				}
-				else if(d==1) {                        //扑空
+				else if(d == 1) {                        //扑空
 					Clear
 					Print
 					printf("\033[10;10H你率先发动攻击，\n");
@@ -159,76 +207,62 @@ void game() {                                             //游戏函数
 					input();
 				}
 
-				else if(d==2 || d==3) {                //反击
+				else if(d == 2 || d == 3) {                //反击
 					Clear
-					my.x=my.x-npc.g;
-					if(my.x<0) my.x=0;
+					my.hp -= npc.str;
 					Print
 					printf("\033[10;10H你率先发动攻击，\n");
-					printf("\t    你因为太过于紧张，反而被NPC击中。\n");
+					printf("\t    你反而被NPC击中。\n");
 					printf("\t\t      按Enter继续\n\t\t\t  ");
 					input();
-					if(my.x<=0){
-						my.x=0;
-						e=2;
+					if(my.hp <= 0){
+						my.hp = 0;
+						win = 2;
 						break;
 					}
 				}
 
-				else if(d==7 || d==8 || d==9 || d==10){    //反击加防御
+				else if(d == 7 || d == 8 || d == 9 || d == 10){    //被反击加防御
 					Clear
-					aa=rand()%(5-0)+1;
-					ab=npc.g-aa;
-					my.x=my.x-ab;
-
-					if(my.x<0) my.x=0;
+					my.hp -= (npc.str - rand()%(5 - 0) +1);
+					if(my.hp <= 0){
+						my.hp = 0;
+						win = 2;
+					}
 					Print
 					printf("\033[10;10H你率先发动攻击，\n");
-					printf("    你手慢了一点，被NPC击中，因为你防御着，你的血量减少%d。\n",ab);
+					printf("    你手慢了一点，被NPC击中，因为你防御着，你的血量减少%d。\n",npc.str - rand()%(5 - 0) +1);
 					printf("\t\t      按Enter继续\n\t\t\t  ");
 					input();
-
-					if(my.x<=0){
-						my.x=0;
-						e=2;
-						break;
-					}
 				}
 			}
 			else {
-				d=rand()%(20-0);
-				if(d==0){                       //反击敌人
+				d = rand()%(20 - 0);
+				if(d == 0){                       //反击敌人
 					Clear
-					npc.x=npc.x-15;
-
-					if(npc.x<0) npc.x=0;
-
+					npc.hp -= 15;
+					if(npc.hp <= 0) {
+						npc.hp = 0;
+						win = 1;
+					}
 					Print
 					printf("\033[10;10H你选择了防御。\n");
 					printf("      在你防御的时候顺便击中了NPC，使NPC的血量减少15。\n");
 					printf("\t\t      按Enter继续\n\t\t\t  ");
 					input();
-
-					if(npc.x<=0){
-						npc.x=0;
-						e=1;
-						break;
-					}
 				}
-				else if(d==20){                  //被打中
+				else if(d == 20){                  //被打中
 					Clear
-					my.x=my.x-npc.g;
-					if(my.x<0) my.x=0;
+					my.hp -= npc.str;
+					if(my.hp <= 0){
+						my.hp = 0;
+						win = 2;
+					}
 					Print
 					printf("\033[10;10H你选择了防御。\n");
-					printf("     你没有防御好，导致敌人打中了你，你的血量减少%d。\n",npc.g);
+					printf("     你没有防御好，导致敌人打中了你，你的血量减少%d。\n",npc.str);
 					printf("\t\t      按Enter继续\n\t\t\t  ");
 					input();
-					if(my.x<=0){
-						my.x=0;
-						e=2;
-						break;
-					}
 				}
 				else{                          //只有防御
 					Clear
@@ -240,65 +274,121 @@ void game() {                                             //游戏函数
 				}
 			}
 			printf("\033[0m\n");
+			if (win != 0) {
+				break;
+			}
 			Clear
 		}
 		Clear
-		if(e == 1){
+		if(win == 1){
 			printf("\t\t此回合玩家胜利\n");
 			printf("\t\t      按Enter继续\n\t\t\t  ");
 			while (input() != 0x0A)
-			my.v++;
-			my.x=my.x2;
-			npc.x=npc.x2;
+			my.V++;
+			my.hp = my.back_hp;
+			npc.hp=npc.back_hp;
 			if(i == count) break;             //到达局数
 			Clear
 			printf("\t      请选择要提升的属性\n\t\t  血量————1\n\t\t 攻击力————2\n\t\t      ");
 			srand(time(NULL));
 			if(input() == 0x31){
-				my.x2 = my.x = my.x + rand()%(100 - 30) + 30;
-				npc.x2 = npc.x = npc.x + rand()%(40 - 30) + 30;
+				my.back_hp = my.hp += rand()%(150 - 40) + 40;
+				npc.back_hp = npc.hp += rand()%(40 - 20) + 20;
 			}
 			else{
-				my.g = my.g + rand()%(20 - 10) + 10;
-				npc.g = npc.g + rand()%(9 - 1) + 1;
+				my.str = my.str + rand()%(30 - 10) + 20;
+				npc.str = npc.str + rand()%(9 - 1) + 1;
 			}
 		}
-		else if(e == 2){
+		else if(win == 2){
 			printf("\t\t此回合NPC胜利\n");
 			printf("\t\t      按Enter继续\n\t\t\t  ");
 			while (input() != 0x0A)
-			npc.v++;
-			my.x = my.x2;
-			npc.x = npc.x2;
+			npc.V++;
+			my.hp = my.back_hp;
+			npc.hp = npc.back_hp;
 			if(i == count) break;
-			my.x = my.x+rand()%(40-10)+10;
-			my.x2 = my.x;
-			npc.x = npc.x+rand()%(60-40)+40;
-			npc.x2 = npc.x;
+			my.back_hp = my.hp += rand()%(40-10)+10;
+			npc.back_hp = npc.hp += rand()%(60-40)+40;
 		}
+		win = 0;
 		Clear
 	}
+	remove("./temp.txt");
+	kill(pid, 1);
 	Clear
 	save(count);
 	return;
 }
 
 void data(){
-	int a,b;
+	FILE *fp;
+	char a[200][200];
+	int count = 0,count2 = 1;
 
-	a = size();
-
-	if (a != 0) {
-		printf("\t\t\t\t游戏记录\n");
-		system("cat ./save.txt");
-		puts("\t\t\t\t 按Enter退出：");
-		while (b != 0) if (kbhit()) b = 0;
+	if (access("./save.txt", 0) == EOF) {
+		fp = fopen("./save.txt", "w");
+		if (!fp) {
+			perror("\033[1;31m[data]fopen\033[0m");
+			input();
+			return;
+		}
+		fclose(fp);
 	}
-	else if(a == 0) {
-		printf("\t\t\t\t什么都没有呢！\n");
-		puts("\t\t\t\t 按Enter返回：");
-		while (b != 0) if (kbhit()) b = 0;
+	fp = fopen("./save.txt", "r");
+	if (!fp) {
+		perror("\033[1;31m[data]fopen\033[0m");
+		input();
 		return;
+	}
+	if (fgets(a[0], sizeof(a), fp) != NULL) {
+		do {
+			count++;
+		}while (fgets(a[count], sizeof(a), fp) != NULL);
+	}
+	else {
+		printf("\033[8;23H\033[1;32m什么都没有呢！\033[0m\n");
+	}
+	while (1) {
+		menu("游戏记录");
+		printf("\033[5;1H\n");
+		while (count2%5 != 0 && count2 < count) {
+			printf("\033[1;33m\033[11C%s\033[0m",a[count2 - 1]);
+			kbhit2();
+			count2++;
+		}
+		if (count2 < count) {
+			count2++;
+		}
+		printf("\033[15;1H%d",count2);
+		Menu
+		if (input() == 0x1B) {
+			getchar();
+		}
+		else {
+			Clear
+			return;
+		}
+		switch (getchar()) {
+			case 0x41:
+			case 0x44:
+				if (count2 - 5 > 0) {
+					count2 -= 5;
+				}
+				else {
+					count2 = 1;
+				}
+				break;
+			case 0x42:
+			case 0x43:
+				break;
+			default:
+				Clear
+				return;
+				break;
+		}
+		printf("\033[15;1H%d",count2);
+		Clear
 	}
 	Clear
 	return;
@@ -323,38 +413,41 @@ void save(int count) {
 	if (access("./save.txt",0) == EOF) {
 		fp = fopen("./save.txt","w");             //创建save.txt文件，存储游戏数据。如果有需要可以自行修改
 		if (!fp) {
-			perror("fopen");
+			perror("\033[1;31m[save]fopen\033[0m");
 			input();
 		}
 		fclose(fp);
 	}
 	fp = fopen("./save.txt","a");
+	Clear
 	if(!fp) {
 		perror("\033[1;31mfopen\033[0m");
 		return;
 	}
-	if(my.v==npc.v){
-		fprintf(fp,"局数：%-3d玩家赢：%-3dNPC赢：%-3d平局\n",count,my.v,npc.v);
+	if(my.V == npc.V){
+		printf("局数：%-3d玩家赢：%-3dNPC赢：%-3d平局\n",count,my.V,npc.V);
+		fprintf(fp,"局数：%-3d玩家赢：%-3dNPC赢：%-3d平局\n",count,my.V,npc.V);
 		printf("\t\t      按Enter继续\n\t\t\t  ");
 	}
-	else if(my.v<npc.v){
-		fprintf(fp,"局数：%-3d玩家赢：%-3dNPC赢：%-3dNPC赢\n",count,my.v,npc.v);
+	else if(my.V < npc.V){
+		printf("局数：%-3d玩家赢：%-3dNPC赢：%-3dNPC赢\n",count,my.V,npc.V);
+		fprintf(fp,"局数：%-3d玩家赢：%-3dNPC赢：%-3dNPC赢\n",count,my.V,npc.V);
 		printf("\t\t      按Enter继续\n\t\t\t  ");
 	}
-	else if(my.v>npc.v){
-		fprintf(fp,"局数：%-3d玩家赢：%-3dNPC赢：%-3d玩家赢\n",count,my.v,npc.v);
+	else if(my.V > npc.V){
+		printf("局数：%-3d玩家赢：%-3dNPC赢：%-3d玩家赢\n",count,my.V,npc.V);
+		fprintf(fp,"局数：%-3d玩家赢：%-3dNPC赢：%-3d玩家赢\n",count,my.V,npc.V);
 		printf("\t\t      按Enter继续\n\t\t\t  ");
 	}
 	fclose(fp);
-
+	input();
+	Clear
 	return;
 }
 
-float size(){
-	float fsize;	
-	struct stat statbuf;
-	stat("./save.txt",&statbuf);
-	fsize=statbuf.st_size;	
-	return fsize;
+void stop() {
+	Clear
+	printf("\033[?25h退出\n");
+	exit(0);
 }
 
