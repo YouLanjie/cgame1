@@ -1,10 +1,12 @@
-#include "headfile/head.h"                                //引入头文件
+#include "../include/head.h"                                //引入头文件
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
+
+struct data my={500,500,0,0,0},npc={500,500,0,0,0};         //分别定义存放玩家和NPC数据的结构体函数
 
 int main() {
 	/*隐藏光标*/
@@ -53,11 +55,8 @@ int main() {
 
 void welcome(int m) {                                          //打印开始界面
 	Clear
-	menu("welcome");
+	menu("welcome",1,1);
 	printf("\033[1;33m\033[8;11H1.开始游戏\033[8;37H2.游戏记录\033[9;11H3.游戏帮助\033[9;37H0.退出游戏\033[0m\n");
-	printf("\033[2;32m\033[6;26H↑\033[10;26H↓\033[0m");
-	printf("\033[11;52H\033[2;32m%d/2\033[1;33m",m);
-	Menu
 }
 
 void game() {                                             //游戏函数
@@ -283,7 +282,7 @@ void game() {                                             //游戏函数
 		if(win == 1){
 			printf("\t\t此回合玩家胜利\n");
 			printf("\t\t      按Enter继续\n\t\t\t  ");
-			while (input() != 0x0A)
+			while (input() != 0x0A) {}                      //使用循环卡住程序
 			my.V++;
 			my.hp = my.back_hp;
 			npc.hp=npc.back_hp;
@@ -303,7 +302,7 @@ void game() {                                             //游戏函数
 		else if(win == 2){
 			printf("\t\t此回合NPC胜利\n");
 			printf("\t\t      按Enter继续\n\t\t\t  ");
-			while (input() != 0x0A)
+			while (input() != 0x0A) {}                     //使用循环卡住程序
 			npc.V++;
 			my.hp = my.back_hp;
 			npc.hp = npc.back_hp;
@@ -350,7 +349,7 @@ void data(){
 		printf("\033[8;23H\033[1;32m什么都没有呢！\033[0m\n");
 	}
 	while (1) {
-		menu("游戏记录");
+		menu2("游戏记录");
 		printf("\033[5;1H\n");
 		while (count2%5 != 0 && count2 < count) {
 			printf("\033[1;33m\033[11C%s\033[0m",a[count2 - 1]);
@@ -361,7 +360,6 @@ void data(){
 			count2++;
 		}
 		printf("\033[15;1H%d",count2);
-		Menu
 		if (input() == 0x1B) {
 			getchar();
 		}
