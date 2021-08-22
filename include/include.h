@@ -16,6 +16,7 @@
 /* pass */
 #include <string.h>
 /* strcat() strcmp() strcpy() */
+#include <dirent.h>
 
 #ifndef Clear
 	#define Clear printf("\033[2J\033[1;1H");
@@ -25,14 +26,14 @@
 #endif
 
 /* kbhit */
-int kbhit();
-int input();
-int kbhit_if();
-int kbhit2();
+int Kbhit();
+int Input();
+int KbhitHas();
+int KbhitNoTime();
 
 /* menu */
-void menu(char title[50], short p, short a);
-void menu2(char title[50]);
+void Menu(char title[50], short p, short a);
+void Menu2(char title[50]);
 
 /* pid */
 /* #include <sys/types.h> */

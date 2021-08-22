@@ -1,29 +1,23 @@
 #include "../include/head.h"                                //引入头文件
 #include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <time.h>
-#include <unistd.h>
 
 struct data my={500,500,0,0,0},npc={500,500,0,0,0};         //分别定义存放玩家和NPC数据的结构体函数
 
 int main() {
 	/*隐藏光标*/
 	printf("\033[?25l");
-	kbhit2();
-
+	signal(SIGINT,stop);
 	srand(time(NULL));                                //随机数
 	my.str = npc.str = rand()%(60-29)+30;             //随机初始攻击力
 
 	while(1) {                                        //主菜单
 		welcome(1);                               //打印主菜单
-		switch (input()) {
+		switch (Input()) {
 			case 0x30:
 				Clear
 				/*显示光标*/
 				printf("\033[?25h");
-				kbhit2();
+				KbhitNoTime();
 				return 0;                 //判断是否等于“0”，如果是，就退出程序
 				break;
 			case 0x31:
@@ -42,27 +36,26 @@ int main() {
 				Clear
 				if(remove("./save.txt") == EOF) {
 					perror("\033[1;31m[main]mremove\033[0m");
-					input();
+					Input();
 				}
 				break;
 		}
 		Clear
 	}                                                 //如果都不正确，重新开始
 	printf("\033[?25h");
-	kbhit2();
+	KbhitNoTime();
 	return 0;                                         //结束main函数，退出程序
 }
 
 void welcome(int m) {                                          //打印开始界面
 	Clear
-	menu("welcome",1,1);
 	printf("\033[1;33m\033[8;11H1.开始游戏\033[8;37H2.游戏记录\033[9;11H3.游戏帮助\033[9;37H0.退出游戏\033[0m\n");
+	Menu("welcome",m,1);
 }
 
 void game() {                                             //游戏函数
 	int count = 0;                                    //局数信息
-	int in = 0,d=0,win=0,f;                     //定义一大堆变量
-	char ma='n';
+	int in = 0,d=0,win=0;                     //定义一大堆变量
 	unsigned long RandomSeed = 0;
 	FILE * fp;
 	pid_t pid;
@@ -70,8 +63,8 @@ void game() {                                             //游戏函数
 	while (in != 0x0A) {
 		Clear
 		printf("\033[1;1H你想玩几局？%d\n%d",count,count);
-		kbhit2();
-		in = input();
+		KbhitNoTime();
+		in = Input();
 		if (in > 0x2F && in < 0x3A) {
 			if (count == 0) {
 				if (in == 0x30) {
@@ -81,7 +74,7 @@ void game() {                                             //游戏函数
 				}
 			}
 			count = count * 10 + ( in - 48 );
-			kbhit2();
+			KbhitNoTime();
 		}
 		else if (in == 0x7F) {
 			Clear
@@ -92,7 +85,7 @@ void game() {                                             //游戏函数
 			else if (count < 10) {
 				count = 0;
 			}
-			kbhit2();
+			KbhitNoTime();
 		}
 		else if (in == 0x0A) {
 			break;
@@ -111,7 +104,7 @@ void game() {                                             //游戏函数
 	else if(count >= 100) {                               //勉强还能忍
 		Clear
 		printf("这么多局，您确定吗？Y/n\n\t\t\t  ");
-		in = input();
+		in = Input();
 		if(in =='y' || in=='Y') {
 			Clear
 		}
@@ -125,14 +118,14 @@ void game() {                                             //游戏函数
 	fp = fopen("./temp.txt","w");
 	if (fp == NULL) {
 		perror("\033[1;31m[init]fopen\033[0m");
-		input();
+		Input();
 		return;
 	}
 	fclose(fp);
 	pid = fork();
 	if (pid == EOF) {
 		perror("\033[1;31mfork\033[0m");
-		input();
+		Input();
 		return;
 	}
 	while (pid == 0) {
@@ -141,24 +134,24 @@ void game() {                                             //游戏函数
 		fp = fopen("./temp.txt","w");
 		if (fp == NULL) {
 			perror("\033[1;31m[write]fopen\033[0m");
-			input();
+			Input();
 			exit(1);
 		}
 		fprintf(fp, "%ld", RandomSeed);
 		fclose(fp);
 		system("sleep 0.001");
 		printf("\033[1;60H      \033[1;60H%ld\033[1;1H",RandomSeed);
-		kbhit2();
+		KbhitNoTime();
 	}
 	for(int i = 1; i <= count; i++) {
 		while(1) {
 			Print
-			in = input();
+			in = Input();
 			printf("\033[32m");
 			fp = fopen("./temp.txt", "r");
 			if (fp == NULL) {
 				perror("\033[1;31m[read]fopen\033[0m");
-				input();
+				Input();
 				kill(pid, 1);
 				return;
 			}
@@ -170,7 +163,7 @@ void game() {                                             //游戏函数
 			if(in == 0x30) {
 				Clear
 				printf("\033[1;1H您确定要退出吗？您的记录将不会保存！\n");
-				in = input();
+				in = Input();
 				if(in =='y' || in =='Y') {
 					my.str=my.back_str;
 					npc.str=npc.back_str;
@@ -195,7 +188,7 @@ void game() {                                             //游戏函数
 					printf("\033[10;10H你率先发动攻击，\n");
 					printf("\t    你精准的刺中了NPC,NPC血量减少%d\n",my.str);
 					printf("\t\t      按Enter继续\n\t\t\t  ");
-					input();
+					Input();
 				}
 				else if(d == 1) {                        //扑空
 					Clear
@@ -203,7 +196,7 @@ void game() {                                             //游戏函数
 					printf("\033[10;10H你率先发动攻击，\n");
 					printf("\t    但是，你扑了个空，未能伤害到NPC。\n");
 					printf("\t\t      按Enter继续\n\t\t\t  ");
-					input();
+					Input();
 				}
 
 				else if(d == 2 || d == 3) {                //反击
@@ -213,7 +206,7 @@ void game() {                                             //游戏函数
 					printf("\033[10;10H你率先发动攻击，\n");
 					printf("\t    你反而被NPC击中。\n");
 					printf("\t\t      按Enter继续\n\t\t\t  ");
-					input();
+					Input();
 					if(my.hp <= 0){
 						my.hp = 0;
 						win = 2;
@@ -232,7 +225,7 @@ void game() {                                             //游戏函数
 					printf("\033[10;10H你率先发动攻击，\n");
 					printf("    你手慢了一点，被NPC击中，因为你防御着，你的血量减少%d。\n",npc.str - rand()%(5 - 0) +1);
 					printf("\t\t      按Enter继续\n\t\t\t  ");
-					input();
+					Input();
 				}
 			}
 			else {
@@ -248,7 +241,7 @@ void game() {                                             //游戏函数
 					printf("\033[10;10H你选择了防御。\n");
 					printf("      在你防御的时候顺便击中了NPC，使NPC的血量减少15。\n");
 					printf("\t\t      按Enter继续\n\t\t\t  ");
-					input();
+					Input();
 				}
 				else if(d == 20){                  //被打中
 					Clear
@@ -261,7 +254,7 @@ void game() {                                             //游戏函数
 					printf("\033[10;10H你选择了防御。\n");
 					printf("     你没有防御好，导致敌人打中了你，你的血量减少%d。\n",npc.str);
 					printf("\t\t      按Enter继续\n\t\t\t  ");
-					input();
+					Input();
 				}
 				else{                          //只有防御
 					Clear
@@ -269,7 +262,7 @@ void game() {                                             //游戏函数
 					printf("\033[10;10H你选择了防御。\n");
 					printf("\t  你防住了敌人的攻击，但是这已经很勉强了。\n");
 					printf("\t\t      按Enter继续\n\t\t\t  ");
-					input();
+					Input();
 				}
 			}
 			printf("\033[0m\n");
@@ -282,7 +275,7 @@ void game() {                                             //游戏函数
 		if(win == 1){
 			printf("\t\t此回合玩家胜利\n");
 			printf("\t\t      按Enter继续\n\t\t\t  ");
-			while (input() != 0x0A) {}                      //使用循环卡住程序
+			while (Input() != 0x0A) {}                      //使用循环卡住程序
 			my.V++;
 			my.hp = my.back_hp;
 			npc.hp=npc.back_hp;
@@ -290,7 +283,7 @@ void game() {                                             //游戏函数
 			Clear
 			printf("\t      请选择要提升的属性\n\t\t  血量————1\n\t\t 攻击力————2\n\t\t      ");
 			srand(time(NULL));
-			if(input() == 0x31){
+			if(Input() == 0x31){
 				my.back_hp = my.hp += rand()%(150 - 40) + 40;
 				npc.back_hp = npc.hp += rand()%(40 - 20) + 20;
 			}
@@ -302,7 +295,7 @@ void game() {                                             //游戏函数
 		else if(win == 2){
 			printf("\t\t此回合NPC胜利\n");
 			printf("\t\t      按Enter继续\n\t\t\t  ");
-			while (input() != 0x0A) {}                     //使用循环卡住程序
+			while (Input() != 0x0A) {}                     //使用循环卡住程序
 			npc.V++;
 			my.hp = my.back_hp;
 			npc.hp = npc.back_hp;
@@ -329,7 +322,7 @@ void data(){
 		fp = fopen("./save.txt", "w");
 		if (!fp) {
 			perror("\033[1;31m[data]fopen\033[0m");
-			input();
+			Input();
 			return;
 		}
 		fclose(fp);
@@ -337,7 +330,7 @@ void data(){
 	fp = fopen("./save.txt", "r");
 	if (!fp) {
 		perror("\033[1;31m[data]fopen\033[0m");
-		input();
+		Input();
 		return;
 	}
 	if (fgets(a[0], sizeof(a), fp) != NULL) {
@@ -349,18 +342,18 @@ void data(){
 		printf("\033[8;23H\033[1;32m什么都没有呢！\033[0m\n");
 	}
 	while (1) {
-		menu2("游戏记录");
+		Menu2("游戏记录");
 		printf("\033[5;1H\n");
 		while (count2%5 != 0 && count2 < count) {
 			printf("\033[1;33m\033[11C%s\033[0m",a[count2 - 1]);
-			kbhit2();
+			KbhitNoTime();
 			count2++;
 		}
 		if (count2 < count) {
 			count2++;
 		}
 		printf("\033[15;1H%d",count2);
-		if (input() == 0x1B) {
+		if (Input() == 0x1B) {
 			getchar();
 		}
 		else {
@@ -400,7 +393,7 @@ void help(){
 	printf("\t3、如果有bug，请上报，我知道了会改的。\n");
 	printf("\t4、不要在Windows下运行此程序。\n\n\n");
 	printf("\t\t     按Enter退出\n\t\t\t  ");
-	input();
+	Input();
 	Clear
 	return;
 }
@@ -412,7 +405,7 @@ void save(int count) {
 		fp = fopen("./save.txt","w");             //创建save.txt文件，存储游戏数据。如果有需要可以自行修改
 		if (!fp) {
 			perror("\033[1;31m[save]fopen\033[0m");
-			input();
+			Input();
 		}
 		fclose(fp);
 	}
@@ -438,7 +431,7 @@ void save(int count) {
 		printf("\t\t      按Enter继续\n\t\t\t  ");
 	}
 	fclose(fp);
-	input();
+	Input();
 	Clear
 	return;
 }
@@ -448,4 +441,3 @@ void stop() {
 	printf("\033[?25h退出\n");
 	exit(0);
 }
-
