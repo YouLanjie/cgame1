@@ -1,9 +1,11 @@
 #include "../include/head.h"                                //引入头文件
-#include <signal.h>
 
 struct data my={500,500,0,0,0},npc={500,500,0,0,0};         //分别定义存放玩家和NPC数据的结构体函数
 
 int main() {
+	struct winsize size;
+	int startSize = 0;
+
 	/*隐藏光标*/
 	printf("\033[?25l");
 	signal(SIGINT,stop);
@@ -11,7 +13,11 @@ int main() {
 	my.str = npc.str = rand()%(60-29)+30;             //随机初始攻击力
 
 	while(1) {                                        //主菜单
-		welcome(1);                               //打印主菜单
+		Clear2
+		ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+		startSize = size.ws_col / 2 - 20;
+		printf("\033[1;33m\033[8;%dH1.开始游戏\033[8;%dH2.游戏记录\033[9;%dH3.游戏帮助\033[9;%dH0.退出游戏\033[0m\n", startSize, startSize + 32, startSize, startSize + 32);
+		Menu("welcome",1,1);
 		switch (Input()) {
 			case 0x30:
 				Clear
@@ -47,18 +53,12 @@ int main() {
 	return 0;                                         //结束main函数，退出程序
 }
 
-void welcome(int m) {                                          //打印开始界面
-	Clear
-	printf("\033[1;33m\033[8;11H1.开始游戏\033[8;37H2.游戏记录\033[9;11H3.游戏帮助\033[9;37H0.退出游戏\033[0m\n");
-	Menu("welcome",m,1);
-}
-
 void game() {                                             //游戏函数
 	int count = 0;                                    //局数信息
 	int in = 0,d=0,win=0;                     //定义一大堆变量
-	unsigned long RandomSeed = 0;
+	int RandomSeed = 0;
+	char randomChar = 0;
 	FILE * fp;
-	pid_t pid;
 
 	while (in != 0x0A) {
 		Clear
@@ -114,51 +114,22 @@ void game() {                                             //游戏函数
 	}
 	Clear
 	srand(time(NULL));
-	RandomSeed = rand()%10001;
-	fp = fopen("./temp.txt","w");
-	if (fp == NULL) {
-		perror("\033[1;31m[init]fopen\033[0m");
-		Input();
-		return;
-	}
-	fclose(fp);
-	pid = fork();
-	if (pid == EOF) {
-		perror("\033[1;31mfork\033[0m");
-		Input();
-		return;
-	}
-	while (pid == 0) {
-		srand(RandomSeed);
-		RandomSeed += rand()%(10000 - 99) + 100;
-		fp = fopen("./temp.txt","w");
-		if (fp == NULL) {
-			perror("\033[1;31m[write]fopen\033[0m");
-			Input();
-			exit(1);
-		}
-		fprintf(fp, "%ld", RandomSeed);
-		fclose(fp);
-		system("sleep 0.001");
-		printf("\033[1;60H      \033[1;60H%ld\033[1;1H",RandomSeed);
-		KbhitNoTime();
-	}
+	RandomSeed = rand()%(10000 - 99) + 100;
 	for(int i = 1; i <= count; i++) {
 		while(1) {
 			Print
 			in = Input();
-			printf("\033[32m");
-			fp = fopen("./temp.txt", "r");
-			if (fp == NULL) {
-				perror("\033[1;31m[read]fopen\033[0m");
-				Input();
-				kill(pid, 1);
-				return;
+			fp = fopen("/dev/random", "rb");
+			if (!fp) {
+				srand(RandomSeed);
 			}
-			fscanf(fp,"%ld",&RandomSeed);
-			fclose(fp);
-			srand(RandomSeed);     /*随机数*/
-			printf("\033[2;60H      \033[2;60H%ld",RandomSeed);
+			else {
+				fgets(&randomChar, 1, fp);
+				srand(randomChar);
+				RandomSeed += rand()%(10000 - 99) + 100;
+				fclose(fp);
+			}
+			printf("\033[32m\033[1;1H%d\033[2;1H%c\n",RandomSeed,randomChar);
 
 			if(in == 0x30) {
 				Clear
@@ -168,7 +139,6 @@ void game() {                                             //游戏函数
 					my.str=my.back_str;
 					npc.str=npc.back_str;
 					remove("./temp.txt");
-					kill(pid, 1);
 					return;
 				}
 				Clear
@@ -307,7 +277,6 @@ void game() {                                             //游戏函数
 		Clear
 	}
 	remove("./temp.txt");
-	kill(pid, 1);
 	Clear
 	save(count);
 	return;
@@ -317,6 +286,8 @@ void data(){
 	FILE *fp;
 	char a[200][200];
 	int count = 0,count2 = 1;
+	struct winsize size;
+	int startSize = 0;
 
 	if (access("./save.txt", 0) == EOF) {
 		fp = fopen("./save.txt", "w");
@@ -333,13 +304,15 @@ void data(){
 		Input();
 		return;
 	}
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+	startSize = size.ws_col / 2 - 7;
 	if (fgets(a[0], sizeof(a), fp) != NULL) {
 		do {
 			count++;
 		}while (fgets(a[count], sizeof(a), fp) != NULL);
 	}
 	else {
-		printf("\033[8;23H\033[1;32m什么都没有呢！\033[0m\n");
+		printf("\033[8;%dH\033[1;32m什么都没有呢！\033[0m\n", startSize);
 	}
 	while (1) {
 		Menu2("游戏记录");
@@ -387,12 +360,11 @@ void data(){
 
 void help(){
 	Clear
-	printf("\t\t\t 帮助\n");
-	printf("\t1、在主界面时选择项目对应的数字即可。\n");
+	printf("\n\t1、在主界面时选择项目对应的数字即可。\n");
 	printf("\t2、注意，游戏进行的全程只能输入整数，不可输入小数、字符串。\n");
 	printf("\t3、如果有bug，请上报，我知道了会改的。\n");
 	printf("\t4、不要在Windows下运行此程序。\n\n\n");
-	printf("\t\t     按Enter退出\n\t\t\t  ");
+	Menu2("帮助");
 	Input();
 	Clear
 	return;

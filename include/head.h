@@ -13,7 +13,6 @@ struct data{                                 //定义存放角色数据的结构
 
 extern struct data my,npc;         //分别定义存放玩家和NPC数据的结构体函数
 
-void welcome(int m);//主菜单打印
 void game();//游戏
 void data();//游戏记录
 void help();//帮助
